@@ -1,86 +1,90 @@
-# 🧬 Conway's Game of Life — C++ & Raylib
+#  Conway's Game of Life — C++ & Raylib
 
-A real-time, interactive simulation of **Conway's Game of Life** built with **C++** and the **Raylib** graphics library. Watch cellular automata evolve, draw your own patterns, and control the simulation — all in a clean, performant desktop app.
-
----
-
-## 🎮 Demo
-
-> A 1000×1000 window with a 10px cell grid — 100×100 cells running live at configurable FPS.
+A real-time interactive simulation of **Conway's Game of Life** built in C++ using the [Raylib](https://www.raylib.com/) graphics library. Watch cellular automata evolve, die, and regenerate — all driven by just four simple rules.
 
 ---
 
-## ✨ Features
+##  About
 
-- 🟢 **Live Cell Rendering** — Green cells on a dark background for crisp visibility
-- 🖱️ **Interactive Drawing** — Click and drag to toggle cells manually
-- ▶️ **Start / Stop** — Control the simulation at any time
-- 🔀 **Random State** — Fill the grid with a random starting configuration
-- 🗑️ **Clear Grid** — Reset everything to a blank slate
-- ⚡ **FPS Control** — Speed up or slow down the simulation on the fly
-- 🔁 **Wrap-around Grid** — Edges connect to the opposite side (toroidal topology)
-- 🧱 **OOP Architecture** — Clean separation into `Grid` and `Simulation` classes
+A grid simulation running at dynamic FPS with full mouse and keyboard control.
 
 ---
 
-## 🕹️ Controls
+##  The Four Rules
 
-| Key / Input         | Action                        |
-|---------------------|-------------------------------|
-| `Left Mouse Button` | Toggle cell alive/dead        |
-| `Enter`             | Start simulation              |
-| `Space`             | Stop simulation               |
-| `R`                 | Randomize grid                |
-| `C`                 | Clear grid                    |
-| `F`                 | Increase FPS (+2)             |
-| `S`                 | Decrease FPS (-2, min 5)      |
+| Rule | Condition | Outcome |
+|------|-----------|---------|
+| **Underpopulation** | Live cell with < 2 live neighbours | Dies |
+| **Stasis** | Live cell with 2 or 3 live neighbours | Survives |
+| **Overpopulation** | Live cell with > 3 live neighbours | Dies |
+| **Regeneration** | Dead cell with exactly 3 live neighbours | Becomes alive |
+
+---
+
+##  Controls
+
+| Key / Action | Description |
+|---|---|
+| `Left Mouse Click` | Toggle a cell on/off |
+| `Enter` | Start the simulation |
+| `Space` | Pause the simulation |
+| `R` | Fill grid with a random state |
+| `C` | Clear the grid |
+| `F` | Increase FPS (speed up) |
+| `S` | Decrease FPS (slow down) |
 
 ---
 
 ## 🏗️ Project Structure
 
 ```
-├── main.cpp          # Entry point — window setup & game loop
-├── simulation.hpp    # Simulation class interface
-├── simulation.cpp    # Game of Life logic & update rules
-├── grid.hpp          # Grid class interface
-├── grid.cpp          # Grid rendering, cell manipulation
+├── main.cpp          # Entry point, window setup, game loop
+├── simulation.cpp    # Core Game of Life logic & update rules
+├── simulation.hpp    # Simulation class declaration
+├── grid.cpp          # Grid rendering and cell manipulation
+├── grid.hpp          # Grid class declaration
 └── Makefile          # Build configuration
 ```
 
 ---
 
-## 🧠 How It Works
+##  Concepts & Technologies Used
 
-The simulation follows the classic **Conway's Game of Life** rules:
+### Language & Build
+- **C++17** — core language
+- **Makefile** — build automation
 
-1. A **live cell** with 2 or 3 live neighbours **survives**
-2. A **dead cell** with exactly 3 live neighbours **becomes alive**
-3. All other cells **die or stay dead**
+### C++ Concepts Practiced
+- **Header files (`.hpp`)** — separating declarations from definitions for clean modular design
+- **Classes & Constructors** — `Grid` and `Simulation` classes with initializer list constructors
+- **`std::vector`** — 2D grid stored as `vector<vector<int>>` for dynamic sizing
+- **`std::pair` & `std::vector<std::pair<int,int>>`** — used to store the 8 neighbour offset directions compactly
+- **Range-based for loops with `const auto&`** — efficient, read-only iteration over neighbour offsets
+- **Ternary operator** — concise conditional expressions for cell color and value assignment
+- **Modular arithmetic** — wraps grid edges to create a toroidal (wrap-around) world
+- **Encapsulation** — private data members with public getter/setter methods
+- **Boolean state management** — `run` flag to start/stop simulation without data loss
+- **Double-buffering** — `grid` + `tempGrid` pattern to avoid mid-frame mutation
 
-Each frame, a `tempGrid` is used to compute the next generation without mutating the current state mid-update — ensuring correctness.
-
-Neighbour counting uses **modular arithmetic** for seamless edge wrapping:
-```cpp
-int neighbourRow = (row + offset.first + grid.GetRows()) % grid.GetRows();
-```
+### Raylib Functions Used
+- `InitWindow()` / `CloseWindow()` — window lifecycle
+- `SetTargetFPS()` — frame rate control
+- `BeginDrawing()` / `EndDrawing()` — render frame
+- `ClearBackground()` — screen clear each frame
+- `DrawRectangle()` — rendering each cell on the grid
+- `IsMouseButtonDown()` / `GetMousePosition()` — mouse input handling
+- `IsKeyPressed()` — keyboard event detection
+- `GetRandomValue()` — seeding random initial cell states
+- `SetWindowTitle()` — dynamic title to reflect simulation state
+- `WindowShouldClose()` — main loop condition
 
 ---
 
-## 🛠️ Tech Stack
-
-- **Language:** C++17
-- **Graphics:** [Raylib](https://www.raylib.com/)
-- **Build System:** Makefile (MinGW / GCC)
-- **Platform:** Windows (`.exe`) — portable with bundled DLLs
-
----
-
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
-- [Raylib](https://www.raylib.com/index.html) installed
-- GCC / MinGW compiler
+- [Raylib](https://www.raylib.com/) installed
+- G++ compiler with C++17 support
 
 ### Build & Run
 ```bash
@@ -88,24 +92,18 @@ make
 ./main.exe
 ```
 
-Or just run the pre-built `main.exe` (Windows, includes required DLLs).
+---
+
+##  What I Learned
+
+This project was a hands-on dive into:
+- Structuring a C++ project across multiple files using header/source separation
+- Using STL containers (`vector`, `pair`) for clean data modelling
+- Integrating a real-time graphics library (Raylib) for interactive simulation
+- Implementing a classic cellular automaton algorithm with efficient double-buffering
 
 ---
 
-## 📚 What I Learned
+##  License
 
-- Object-oriented design in C++ (classes, constructors, member functions)
-- 2D vector grids and double-buffering for simulation state
-- Real-time rendering with Raylib
-- Modular arithmetic for toroidal boundary conditions
-- Makefile-based build systems
-
----
-
-## 📄 License
-
-This project is open source.
-
----
-
-> *"The Game of Life is not your typical computer game. It is a cellular automaton."*
+Open-source and free to use for learning purposes.
